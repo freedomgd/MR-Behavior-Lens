@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9 — 2026-07-11
+
+- Icon background is now transparent outside the rounded square
+
 ## 0.1.8 — 2026-07-11
 
 - New extension icon: magnifier over red (removed) / green (new) behavior flows
