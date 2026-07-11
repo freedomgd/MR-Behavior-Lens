@@ -14,7 +14,20 @@
     "vscode": "^1.95.0"
   },
   "categories": [
-    "Other"
+    "AI",
+    "SCM Providers"
+  ],
+  "keywords": [
+    "gitlab",
+    "merge request",
+    "code review",
+    "sequence diagram",
+    "mermaid",
+    "ai",
+    "anthropic",
+    "claude",
+    "copilot",
+    "diff"
   ],
   "main": "./dist/extension.js",
   "contributes": {

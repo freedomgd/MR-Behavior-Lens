@@ -1,50 +1,78 @@
 # MR Behavior Lens
 
-VSCode extension ที่อ่าน GitLab Merge Request แล้วตอบคำถามเดียว: **"code ที่แก้ไป เปลี่ยน behavior อะไรบ้าง"** — ออกมาเป็น review + before/after Mermaid sequence diagram (🔴 flow เดิมที่หายไป / 🟢 flow ใหม่) ที่คลิกกลับไป code ได้
+Review GitLab merge requests by answering one question: **"what behavior did this change?"**
 
-## ติดตั้ง / รัน
+Instead of reading a raw diff line by line, MR Behavior Lens analyzes the MR and shows you a review organized around *behavior changes* — including before/after **Mermaid sequence diagrams** (🔴 flows that disappeared / 🟢 new flows) with `[file:line]` references you can click to jump straight to the code.
+
+[ภาษาไทย → README.th.md](README.th.md)
+
+## Features
+
+- **Behavior-first review** — the diff is grouped into behavior groups, each with a summary, behavior changes, findings, and a before/after sequence diagram
+- **Clickable diagrams** — click `[file:line]` in a diagram or finding to open the code (falls back to opening GitLab if the file isn't in your workspace)
+- **Post comments back to the MR** — post any finding as an inline comment on the diff, or write a free-form comment, right from the review panel (always shows an editable input box before posting)
+- **Works with your existing LLM** — uses the VSCode Language Model API (GitHub Copilot or an enterprise LM provider) if available, or your own Anthropic API key
+- **Self-hosted GitLab supported** — point `mrLens.gitlab.url` at your instance
+- **Token usage dashboard** — see today / 7-day / all-time usage, per-MR breakdown, and recent requests
+
+## Getting started
+
+1. Install the extension, then open a workspace whose git remote points at your GitLab project (or set `mrLens.gitlab.projectId` manually).
+2. Run **`MR Lens: Set GitLab Token`** — a personal access token with `read_api` scope (`api` scope if you want to post comments). The token is kept in VSCode secret storage.
+3. Pick an LLM:
+   - If you're signed in to GitHub Copilot (or an enterprise LM provider), it works out of the box (`mrLens.provider: auto`), or
+   - Run **`MR Lens: Set Anthropic API Key`** to use the Anthropic API directly.
+4. Self-hosted GitLab? Set `mrLens.gitlab.url` (default `https://gitlab.com`).
+5. Run **`MR Lens: Review Merge Request…`** and pick an MR.
+
+Want to see it without any setup? Run **`MR Lens: Demo Review (sample data)`**.
+
+> **Cost note:** reviews are powered by an LLM, so they consume your Copilot quota or Anthropic API credits. The extension is built to keep this small (see below), asks for confirmation before any review estimated to exceed `mrLens.tokenBudget` (default 30k input tokens), and ships a token usage dashboard (**`MR Lens: Token Usage`**) so you always know what you spent.
+
+## How it keeps token usage low
+
+1. **Local pre-processing (0 tokens)** — filters lockfiles/generated/binary files, truncates oversized diffs, extracts function names with regex
+2. **Two-stage pipeline** — a cheap model (e.g. `claude-haiku-4-5` / smallest Copilot model) groups the diff into behavior groups first; the main model only analyzes one group at a time
+3. **Budget guard** — asks before sending anything estimated over `mrLens.tokenBudget`
+4. **Cache by diff hash** — re-opening a review of an unchanged MR costs 0 tokens
+5. **Capped LSP context** — callers/callees are attached only where needed, up to `mrLens.contextBytesPerGroup` (4 KB) per group
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `MR Lens: Review Merge Request…` | Pick an MR from a list and open the review panel |
+| `MR Lens: Demo Review (sample data)` | Try the review UI with bundled sample data — no setup needed |
+| `MR Lens: Set GitLab Token` | Store your GitLab PAT in secret storage |
+| `MR Lens: Set Anthropic API Key` | Store your Anthropic API key in secret storage |
+| `MR Lens: Select LLM Model…` | Pick models for the classify/analyze stages from the active provider |
+| `MR Lens: Token Usage` | Open the token usage dashboard |
+| `MR Lens: Clear Review Cache` | Clear cached review results |
+
+## Settings
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `mrLens.gitlab.url` | `https://gitlab.com` | GitLab instance base URL (self-hosted / enterprise supported) |
+| `mrLens.gitlab.token` | empty | GitLab PAT via settings — overrides secret storage. ⚠️ Plain text; prefer the `Set GitLab Token` command |
+| `mrLens.gitlab.projectId` | empty | Project ID or URL-encoded path. Empty = derived from the workspace git remote |
+| `mrLens.provider` | `auto` | `auto` = try VSCode LM (Copilot/enterprise) first, fall back to Anthropic API key |
+| `mrLens.model.classify` / `analyze` | empty | Per-stage model override — easiest to set via `MR Lens: Select LLM Model…` |
+| `mrLens.tokenBudget` | `30000` | Input-token estimate above which the extension asks for confirmation |
+| `mrLens.maxGroups` | `5` | Max behavior groups analyzed per MR |
+| `mrLens.contextBytesPerGroup` | `4096` | Cap on extra LSP context per group |
+
+## Development
 
 ```sh
+git clone https://github.com/freedomgd/MR-Behavior-Lens.git
+cd MR-Behavior-Lens
 npm install
 npm run compile
 ```
 
-เปิดโฟลเดอร์นี้ใน VSCode แล้วกด **F5** (Run Extension) จะได้ Extension Development Host
+Open the folder in VSCode and press **F5** to launch an Extension Development Host.
 
-## Setup ครั้งแรก
+## License
 
-| ขั้น | ทำอะไร |
-|---|---|
-| 1 | `MR Lens: Set GitLab Token` — PAT scope `read_api` (public project ข้ามได้; ถ้าจะ post comment ต้อง scope `api`) หรือใส่ผ่าน setting `mrLens.gitlab.token` สำหรับ enterprise ที่ manage settings จากส่วนกลาง |
-| 2 | เลือก LLM: ถ้ามี GitHub Copilot / enterprise LM provider login อยู่ ใช้ได้เลย (default `auto`) หรือ `MR Lens: Set Anthropic API Key` |
-| 3 | ตั้ง `mrLens.gitlab.url` ถ้าเป็น self-hosted / enterprise GitLab (default `https://gitlab.com`) |
-| 4 | (optional) `MR Lens: Select LLM Model…` — เลือก model จาก list ที่ active อยู่ หรือพิมพ์ model id เองได้ |
-
-`mrLens.gitlab.projectId` เว้นว่างได้ — จะ derive จาก git remote ของ workspace หรือถามตอนรัน
-
-## ใช้งาน
-
-- **`MR Lens: Review Merge Request…`** — เลือก MR จาก list → ได้ panel ที่มี tab ต่อ behavior group: summary, behavior changes, findings, sequence diagram (คลิก `[file:line]` เพื่อเปิด code; ถ้าไฟล์ไม่อยู่ใน workspace จะเปิด GitLab)
-- **Post comment กลับไปที่ MR** — ปุ่ม 💬 ท้ายแต่ละ finding โพสต์เป็น inline comment บน diff ที่ `file:line` นั้น (ถ้าตำแหน่งไม่อยู่ใน diff จะ fallback เป็น comment ธรรมดาพร้อมอ้างอิงไฟล์), ปุ่ม **💬 Comment on MR** ใน header โพสต์ comment อิสระ — ทั้งคู่เปิด input box ให้แก้ข้อความก่อนโพสต์เสมอ (ต้อง token scope `api`)
-- **`MR Lens: Token Usage`** — dashboard การใช้ token: วันนี้ / 7 วัน / ทั้งหมด, กราฟรายวัน, breakdown ต่อ MR, request ล่าสุด
-- **`MR Lens: Clear Review Cache`** — ล้าง cache ผลรีวิว
-
-## ประหยัด token ยังไง
-
-1. **Pre-process ฝั่งเครื่อง (0 token)** — กรอง lockfiles/generated/binary, ตัด diff ที่ยาวเกิน, ดึงชื่อ function ด้วย regex
-2. **Pipeline 2 stage** — Stage A ใช้ model ถูก (`claude-haiku-4-5` / Copilot ตัวเล็ก) จัดกลุ่ม diff เป็น behavior groups ก่อน แล้ว Stage B ใช้ model หลัก (`claude-sonnet-5` / Copilot ตัวใหญ่) วิเคราะห์ทีละกลุ่ม
-3. **Budget guard** — ถ้า input เกิน `mrLens.tokenBudget` (default 30k) จะถามก่อนส่ง
-4. **Cache ตาม diff hash** — เปิดรีวิว MR เดิมซ้ำ = 0 token
-5. **LSP context แบบ cap** — แนบ callers/callees เฉพาะกลุ่มที่จำเป็น ไม่เกิน `mrLens.contextBytesPerGroup` (4KB)
-
-## Settings
-
-| Setting | Default | ความหมาย |
-|---|---|---|
-| `mrLens.gitlab.url` | `https://gitlab.com` | base URL ของ GitLab instance (self-hosted / enterprise ได้) |
-| `mrLens.gitlab.token` | ว่าง | GitLab PAT ผ่าน settings (ชนะ token ใน secret storage; ระวังเป็น plain text) |
-| `mrLens.provider` | `auto` | `auto` = ลอง VSCode LM (Copilot/enterprise) ก่อน fallback Anthropic |
-| `mrLens.model.classify` / `analyze` | ว่าง | override model ต่อ stage — ตั้งง่ายสุดผ่าน `MR Lens: Select LLM Model…` |
-| `mrLens.tokenBudget` | 30000 | เพดาน input token ก่อนถาม confirm |
-| `mrLens.maxGroups` | 5 | จำนวน behavior group สูงสุดต่อ MR |
-| `mrLens.contextBytesPerGroup` | 4096 | เพดาน LSP context ต่อกลุ่ม |
+[MIT](LICENSE)
