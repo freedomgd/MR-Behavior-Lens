@@ -2,7 +2,7 @@
   "name": "mr-behavior-lens",
   "displayName": "MR Behavior Lens",
   "description": "Review GitLab merge requests as before/after behavior sequence diagrams",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "publisher": "sinjmenaruchi",
   "license": "MIT",
   "repository": {

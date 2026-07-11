@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.8 — 2026-07-11
+
+- New extension icon: magnifier over red (removed) / green (new) behavior flows
+
 ## 0.1.7 — 2026-07-11
 
 - Marketplace page now focuses on using the extension — development/build instructions moved to CONTRIBUTING.md in the repo
