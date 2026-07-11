@@ -6,14 +6,7 @@ VSCode extension ที่อ่าน GitLab Merge Request แล้วตอ�
 
 ## ติดตั้ง
 
-ติดตั้งจาก VSCode Marketplace (ค้น "MR Behavior Lens") หรือถ้าจะรันจาก source:
-
-```sh
-npm install
-npm run compile
-```
-
-แล้วเปิดโฟลเดอร์นี้ใน VSCode กด **F5** (Run Extension) จะได้ Extension Development Host
+ติดตั้งจาก [VSCode Marketplace](https://marketplace.visualstudio.com/items?itemName=sinjmenaruchi.mr-behavior-lens) (ค้น "MR Behavior Lens") — ถ้าจะพัฒนา/รันจาก source ดู [CONTRIBUTING.md](CONTRIBUTING.md)
 
 > **เรื่องค่าใช้จ่าย:** การรีวิวใช้ LLM — กิน Copilot quota หรือ Anthropic API credit ของคุณ (มี budget guard + dashboard ให้ดูตลอด ดูหัวข้อ "ประหยัด token ยังไง")
 

@@ -5,6 +5,8 @@ node_modules/**
 dist/**/*.map
 esbuild.js
 Makefile
+CONTRIBUTING.md
+README.th.md
 tsconfig.json
 package-lock.json
 *.vsix

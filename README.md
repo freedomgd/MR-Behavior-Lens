@@ -62,17 +62,6 @@ Want to see it without any setup? Run **`MR Lens: Demo Review (sample data)`**.
 | `mrLens.maxGroups` | `5` | Max behavior groups analyzed per MR |
 | `mrLens.contextBytesPerGroup` | `4096` | Cap on extra LSP context per group |
 
-## Development
-
-```sh
-git clone https://github.com/freedomgd/MR-Behavior-Lens.git
-cd MR-Behavior-Lens
-npm install
-npm run compile
-```
-
-Open the folder in VSCode and press **F5** to launch an Extension Development Host.
-
 ## License
 
 [MIT](LICENSE)

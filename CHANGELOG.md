@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7 — 2026-07-11
+
+- Marketplace page now focuses on using the extension — development/build instructions moved to CONTRIBUTING.md in the repo
+
 ## 0.1.6 — 2026-07-11
 
 Initial public release.
