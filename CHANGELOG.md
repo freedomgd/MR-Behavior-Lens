@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.10 — 2026-07-11
+
+- Icon redesigned as a free-floating magnifier (no background square), works on light and dark themes
+
 ## 0.1.9 — 2026-07-11
 
 - Icon background is now transparent outside the rounded square
