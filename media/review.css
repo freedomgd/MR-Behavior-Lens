@@ -1,0 +1,281 @@
+:root {
+  color-scheme: light dark;
+}
+body {
+  font-family: var(--vscode-font-family);
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  margin: 0;
+  padding: 0 16px 32px;
+}
+header {
+  padding: 12px 0 8px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+h1 {
+  font-size: 1.1em;
+  margin: 0 0 4px;
+}
+.meta {
+  color: var(--vscode-descriptionForeground);
+  font-size: 0.85em;
+}
+.status {
+  margin-top: 6px;
+  font-size: 0.85em;
+  color: var(--vscode-descriptionForeground);
+}
+.status.error {
+  color: var(--vscode-errorForeground);
+}
+/* TL;DR — one-liner per behavior group, shown above the tabs */
+section.tldr {
+  margin: 10px 0 2px;
+  padding: 8px 12px;
+  border: 1px solid var(--vscode-panel-border);
+  border-left: 3px solid var(--vscode-button-background);
+  border-radius: 6px;
+  background: var(--vscode-editorWidget-background);
+}
+section.tldr h2 {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 4px;
+  color: var(--vscode-descriptionForeground);
+}
+section.tldr ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.9em;
+}
+section.tldr li {
+  margin: 3px 0;
+}
+a.tldr-group {
+  color: var(--vscode-textLink-foreground);
+  cursor: pointer;
+  font-weight: 600;
+}
+a.tldr-group:hover {
+  text-decoration: underline;
+}
+.tldr-line {
+  margin: 6px 0 2px;
+  font-size: 0.95em;
+}
+button.post-review-btn {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 4px;
+  padding: 2px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 0.75em;
+  font-weight: 400;
+  vertical-align: middle;
+}
+button.post-review-btn:hover:not(:disabled) {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+button.post-review-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button.post-review-btn.posted {
+  background: transparent;
+  color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043);
+  cursor: default;
+}
+nav {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+nav button {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 4px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+nav button.active {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+.group {
+  display: none;
+}
+.group.active {
+  display: block;
+}
+.group h2 {
+  font-size: 1em;
+  margin: 12px 0 4px;
+}
+.summary {
+  margin: 6px 0 12px;
+}
+.cache-badge {
+  font-size: 0.75em;
+  color: var(--vscode-descriptionForeground);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 8px;
+  padding: 1px 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+ul.changes li,
+ul.findings li {
+  margin: 4px 0;
+}
+/* behavior flow — step diff (primary view) */
+ol.steps {
+  list-style: none;
+  margin: 8px 0 16px;
+  padding: 0;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--vscode-editorWidget-background);
+  font-size: 0.9em;
+}
+.step {
+  display: flex;
+  gap: 10px;
+  padding: 5px 12px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  line-height: 1.45;
+}
+.step:last-child {
+  border-bottom: none;
+}
+.step .marker {
+  flex: none;
+  width: 1ch;
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-weight: 700;
+  color: var(--vscode-descriptionForeground);
+}
+.step-body {
+  flex: 1;
+}
+.step.added {
+  background: color-mix(in srgb, var(--vscode-gitDecoration-addedResourceForeground, #2ea043) 10%, transparent);
+}
+.step.added .marker {
+  color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043);
+}
+.step.removed {
+  background: color-mix(in srgb, var(--vscode-gitDecoration-deletedResourceForeground, #f85149) 9%, transparent);
+}
+.step.removed .marker {
+  color: var(--vscode-gitDecoration-deletedResourceForeground, #f85149);
+}
+.step.removed .step-body {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+.step.changed {
+  background: color-mix(in srgb, var(--vscode-gitDecoration-modifiedResourceForeground, #d29922) 9%, transparent);
+}
+.step.changed .marker {
+  color: var(--vscode-gitDecoration-modifiedResourceForeground, #d29922);
+}
+.step-before {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+.step-arrow {
+  margin: 0 4px;
+  color: var(--vscode-descriptionForeground);
+}
+/* collapsible supplements (diagram, raw behavior-change list) */
+details.extra-details {
+  margin: 10px 0;
+}
+details.extra-details > summary {
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: var(--vscode-descriptionForeground);
+}
+details.extra-details[open] > summary {
+  color: var(--vscode-foreground);
+  margin-bottom: 4px;
+}
+.sev {
+  display: inline-block;
+  min-width: 60px;
+  font-size: 0.75em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.sev.critical {
+  color: var(--vscode-errorForeground);
+}
+.sev.warning {
+  color: var(--vscode-editorWarning-foreground, #cca700);
+}
+.sev.info {
+  color: var(--vscode-descriptionForeground);
+}
+button.comment-btn {
+  background: var(--vscode-button-secondaryBackground);
+  color: var(--vscode-button-secondaryForeground);
+  border: none;
+  border-radius: 4px;
+  padding: 1px 6px;
+  margin-left: 6px;
+  cursor: pointer;
+  font-size: 0.85em;
+  vertical-align: middle;
+}
+button.comment-btn:hover:not(:disabled) {
+  background: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+}
+button.comment-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+button.comment-btn.posted {
+  background: transparent;
+  color: var(--vscode-gitDecoration-addedResourceForeground, #2ea043);
+  cursor: default;
+}
+a.loc {
+  color: var(--vscode-textLink-foreground);
+  cursor: pointer;
+  text-decoration: none;
+}
+a.loc:hover {
+  text-decoration: underline;
+}
+.diagram {
+  margin: 12px 0;
+  padding: 8px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  overflow-x: auto;
+  background: var(--vscode-editorWidget-background);
+}
+.diagram svg {
+  max-width: none;
+}
+.diagram-error {
+  color: var(--vscode-errorForeground);
+  font-size: 0.85em;
+  white-space: pre-wrap;
+}
+/* clickable [file:line] tags inside the mermaid SVG */
+.diagram svg .loc-click {
+  cursor: pointer;
+  text-decoration: underline;
+}

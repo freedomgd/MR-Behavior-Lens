@@ -1,0 +1,12 @@
+.vscode/**
+.DS_Store
+src/**
+node_modules/**
+dist/**/*.map
+esbuild.js
+Makefile
+tsconfig.json
+package-lock.json
+*.vsix
+*.vsix.zip
+media/icon.svg

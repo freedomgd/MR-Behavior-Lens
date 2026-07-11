@@ -1,0 +1,137 @@
+{
+  "name": "mr-behavior-lens",
+  "displayName": "MR Behavior Lens",
+  "description": "Review GitLab merge requests as before/after behavior sequence diagrams",
+  "version": "0.1.6",
+  "publisher": "sinjmenaruchi",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/freedomgd/MR-Behavior-Lens.git"
+  },
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "mrLens.reviewMergeRequest",
+        "title": "MR Lens: Review Merge Request…"
+      },
+      {
+        "command": "mrLens.demoReview",
+        "title": "MR Lens: Demo Review (sample data)"
+      },
+      {
+        "command": "mrLens.showTokenUsage",
+        "title": "MR Lens: Token Usage"
+      },
+      {
+        "command": "mrLens.setGitLabToken",
+        "title": "MR Lens: Set GitLab Token"
+      },
+      {
+        "command": "mrLens.selectModel",
+        "title": "MR Lens: Select LLM Model…"
+      },
+      {
+        "command": "mrLens.setAnthropicApiKey",
+        "title": "MR Lens: Set Anthropic API Key"
+      },
+      {
+        "command": "mrLens.clearCache",
+        "title": "MR Lens: Clear Review Cache"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "mrLens",
+          "title": "MR Lens",
+          "icon": "media/activity-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "mrLens": [
+        {
+          "type": "webview",
+          "id": "mrLens.sidebarView",
+          "name": "MR Lens"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "MR Behavior Lens",
+      "properties": {
+        "mrLens.gitlab.url": {
+          "type": "string",
+          "default": "https://gitlab.com",
+          "markdownDescription": "GitLab instance base URL. For self-hosted / enterprise GitLab set your instance URL, e.g. `https://gitlab.mycompany.com`."
+        },
+        "mrLens.gitlab.token": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "GitLab personal access token (`read_api` scope; `api` scope to post comments). Takes precedence over the token stored via **MR Lens: Set GitLab Token**. ⚠️ Stored as plain text in settings — for better security leave this empty and use the command instead (secret storage)."
+        },
+        "mrLens.gitlab.projectId": {
+          "type": "string",
+          "default": "",
+          "description": "GitLab project ID or URL-encoded path (e.g. group%2Fproject). Empty = derive from the workspace git remote."
+        },
+        "mrLens.provider": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "vscode-lm",
+            "anthropic"
+          ],
+          "default": "auto",
+          "description": "LLM provider. auto = try VSCode Language Model API (Copilot) first, fall back to Anthropic API key."
+        },
+        "mrLens.model.classify": {
+          "type": "string",
+          "default": "",
+          "description": "Model for the cheap classification stage. Empty = lowest-tier provider default (Anthropic: claude-haiku-4-5, vscode-lm: smallest available)."
+        },
+        "mrLens.model.analyze": {
+          "type": "string",
+          "default": "",
+          "description": "Model for the main analysis stage. Empty = lowest-tier provider default (Anthropic: claude-haiku-4-5, vscode-lm: smallest available). Pick a bigger model here for deeper reviews."
+        },
+        "mrLens.tokenBudget": {
+          "type": "number",
+          "default": 30000,
+          "description": "Ask for confirmation before a review that is estimated to exceed this many input tokens."
+        },
+        "mrLens.maxGroups": {
+          "type": "number",
+          "default": 5,
+          "description": "Maximum number of behavior groups analyzed per merge request."
+        },
+        "mrLens.contextBytesPerGroup": {
+          "type": "number",
+          "default": 4096,
+          "description": "Cap on extra LSP context (callers/callees) attached per behavior group, in bytes."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc --noEmit && node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.95.0",
+    "esbuild": "^0.24.0",
+    "mermaid": "^11.4.0",
+    "typescript": "^5.6.0"
+  }
+}
